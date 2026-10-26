@@ -1,0 +1,23 @@
+services:
+  mailpit:
+    image: axllent/mailpit:v1.31.2
+    ports:
+      - "127.0.0.1:1025:1025"   # local SMTP capture (no actual delivery)
+      - "127.0.0.1:8025:8025"   # inspect messages in browser
+
+  email-studio:
+    build: .
+    depends_on:
+      - mailpit
+    environment:
+      SERVER_ADDRESS: 0.0.0.0
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      SMTP_AUTH: "false"
+      # Explicitly permit unencrypted transport ONLY to local Mailpit test server.
+      APP_ALLOW_LOCAL_MAILPIT: "true"
+      SMTP_STARTTLS: "false"
+      SMTP_FROM_ADDRESS: ${SMTP_FROM_ADDRESS:-oys@localhost.test}
+      APP_ALLOWED_FROM: ${APP_ALLOWED_FROM:-}
+    ports:
+      - "127.0.0.1:8080:8080"

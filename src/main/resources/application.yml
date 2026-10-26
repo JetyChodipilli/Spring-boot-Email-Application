@@ -1,0 +1,87 @@
+
+# ==========================================
+# OPERATION YUVA SANKALP - EMAIL STUDIO
+# Spring Boot 4.1.2
+# Gmail SMTP Configuration
+# No Login Required
+# ==========================================
+
+server:
+  address: ${SERVER_ADDRESS:127.0.0.1}
+  port: ${SERVER_PORT:8080}
+
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        same-site: strict
+        secure: ${SESSION_COOKIE_SECURE:false}
+      timeout: 30m
+
+  tomcat:
+    max-part-count: 32
+
+spring:
+  application:
+    name: oys-email-studio
+
+  # Load environment variables from project-root .env
+  config:
+    import: "optional:file:./.env[.properties]"
+
+  # Spring Boot 4 error configuration
+  web:
+    error:
+      include-message: never
+      include-stacktrace: never
+      include-binding-errors: never
+
+  # File upload settings
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 35MB
+
+  # ========================================
+  # GMAIL SMTP CONFIGURATION
+  # ========================================
+  mail:
+    host: ${SMTP_HOST:smtp.gmail.com}
+    port: ${SMTP_PORT:587}
+
+    username: ${SMTP_USERNAME:}
+    password: ${SMTP_PASSWORD:}
+
+    protocol: smtp
+    default-encoding: UTF-8
+
+    properties:
+      mail:
+        smtp:
+          auth: ${SMTP_AUTH:true}
+
+          starttls:
+            enable: ${SMTP_STARTTLS:true}
+            required: true
+
+          ssl:
+            checkserveridentity: true
+
+          connectiontimeout: 10000
+          timeout: 20000
+          writetimeout: 20000
+
+# ==========================================
+# APPLICATION MAIL SETTINGS
+# ==========================================
+app:
+  mail:
+    # Actual sender email from .env
+    from: ${SMTP_FROM_ADDRESS:oys@localhost.test}
+
+    # Only allow approved sender addresses
+    allowed-from: ${APP_ALLOWED_FROM:}
+
+    # Must be false when using Gmail
+    allow-local-mailpit: ${APP_ALLOW_LOCAL_MAILPIT:false}

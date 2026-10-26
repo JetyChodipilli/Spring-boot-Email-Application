@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OYS Mail Studio — Design & Send</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="brand"><span class="brand-mark">B<span class="brand-dot">.</span></span><div><strong>brainserve<span class="brand-dot">.</span></strong><small>COMMUNICATION STUDIO</small></div></div>
+    <div class="rail-heading">WORKSPACE</div>
+    <div class="rail-nav active"><span class="rail-icon">✉</span> Email composer <span class="nav-dot"></span></div>
+    <div class="rail-help"><span class="rail-help-icon">✦</span><strong>Built for OYS</strong><p>Create beautiful student emails, attach learning resources, and send them from an authorized address.</p><div class="status-line"><span class="online"></span> Secure sender</div></div>
+    <div class="rail-bottom">OPERATION YUVA SANKALP<br><span>Made for student learning</span></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div class="crumb">Campaigns <span>/</span> <b>New email</b></div><div class="top-actions"><span class="autosaved">✧ No login required · Local-only workspace</span></div></header>
+    <div class="content-header"><div><div class="eyebrow"><span></span> NEW MESSAGE</div><h1>Design your email<span class="period">.</span></h1><p>Personalize every detail and see exactly what your recipients will receive.</p></div><button class="send-btn" id="sendBtn" type="button"><span>➤</span> Send email</button></div>
+    <div class="workspace">
+      <section class="editor" aria-label="Email settings and body editor">
+        <section class="panel"><div class="section-title"><span class="step">01</span><div><h2>Message details</h2><p>Who is this email for?</p></div></div>
+          <div class="form-grid"><label class="field full"><span>To <em>*</em></span><textarea id="to" rows="2" placeholder="student@example.com, another@example.com" spellcheck="false"></textarea><small>Separate multiple recipients with commas (maximum 50)</small></label>
+          <label class="field"><span>From <em>*</em></span><select id="from"><option value="">Loading authorized sender…</option></select></label><label class="field"><span>Sender name</span><input id="fromName" maxlength="100" value="Operation Yuva Sankalp" /></label>
+          <label class="field full"><span>Subject <em>*</em></span><input id="subject" maxlength="180" value="Your learning journey starts here | Operation Yuva Sankalp" placeholder="Subject line" /></label>
+          <details class="advanced full"><summary>Advanced sender options</summary><label class="field"><span>Reply-to address (optional)</span><input id="replyTo" placeholder="reply@example.com" type="email" /></label></details></div>
+        </section>
+        <section class="panel"><div class="section-title"><span class="step">02</span><div><h2>Banner &amp; styling</h2><p>Use the original OYS artwork or your own.</p></div></div>
+          <div class="brainserve-logo-setting"><img src="/images/brainserve-logo.png" width="230" alt="Brainserve logo" /><div><strong>Brainserve brand logo</strong><small>Included automatically above the banner in every outgoing email</small></div></div>
+          <div class="banner-setting"><img src="/images/oys-banner.png" alt="Original Operation Yuva Sankalp banner" id="heroThumbnail" /><div class="banner-row"><div><strong>Header banner</strong><small>PNG or JPG · up to 5 MB</small></div><span class="banner-label" id="bannerState">Original</span></div>
+          <div class="banner-actions"><button class="outline-btn" id="changeHero" type="button">↑ Upload banner</button><button class="text-btn" id="resetHero" type="button">Restore original</button><label class="hide-label"><input type="checkbox" id="hideHero" /> Hide</label></div><input type="file" id="heroFile" accept="image/png,image/jpeg" hidden /></div>
+          <div class="theme-editor" id="themeEditor">
+            <div class="theme-header"><div><strong>OYS brand colors</strong><p>Manually enter HEX values. Each color updates the email preview.</p></div><button class="outline-btn" id="resetTheme" type="button">Restore OYS colors</button></div>
+            <div class="theme-grid">
+              <label class="theme-field" for="theme-primaryOrange"><span class="theme-label">Primary orange</span><small>Buttons, key actions</small><span class="theme-control"><input class="theme-hex" id="theme-primaryOrange" data-theme-key="primaryOrange" maxlength="7" spellcheck="false" autocomplete="off" value="#F97316" aria-label="Primary orange HEX code" /><input class="theme-picker" type="color" id="theme-picker-primaryOrange" data-theme-pick="primaryOrange" value="#F97316" aria-label="Pick Primary orange" /></span><code>--primary-orange</code></label>
+              <label class="theme-field" for="theme-darkOrange"><span class="theme-label">Dark orange</span><small>Social links and emphasis</small><span class="theme-control"><input class="theme-hex" id="theme-darkOrange" data-theme-key="darkOrange" maxlength="7" spellcheck="false" autocomplete="off" value="#EA580C" aria-label="Dark orange HEX code" /><input class="theme-picker" type="color" id="theme-picker-darkOrange" data-theme-pick="darkOrange" value="#EA580C" aria-label="Pick Dark orange" /></span><code>--dark-orange</code></label>
+              <label class="theme-field" for="theme-darkNavy"><span class="theme-label">Dark navy</span><small>Headings and titles</small><span class="theme-control"><input class="theme-hex" id="theme-darkNavy" data-theme-key="darkNavy" maxlength="7" spellcheck="false" autocomplete="off" value="#0D2A52" aria-label="Dark navy HEX code" /><input class="theme-picker" type="color" id="theme-picker-darkNavy" data-theme-pick="darkNavy" value="#0D2A52" aria-label="Pick Dark navy" /></span><code>--dark-navy</code></label>
+              <label class="theme-field" for="theme-background"><span class="theme-label">Background</span><small>Outer email and notice background</small><span class="theme-control"><input class="theme-hex" id="theme-background" data-theme-key="background" maxlength="7" spellcheck="false" autocomplete="off" value="#F9FAFB" aria-label="Background HEX code" /><input class="theme-picker" type="color" id="theme-picker-background" data-theme-pick="background" value="#F9FAFB" aria-label="Pick Background" /></span><code>--background</code></label>
+              <label class="theme-field" for="theme-white"><span class="theme-label">White / card</span><small>Email card and buttons</small><span class="theme-control"><input class="theme-hex" id="theme-white" data-theme-key="white" maxlength="7" spellcheck="false" autocomplete="off" value="#FFFFFF" aria-label="White / card HEX code" /><input class="theme-picker" type="color" id="theme-picker-white" data-theme-pick="white" value="#FFFFFF" aria-label="Pick White / card" /></span><code>--white</code></label>
+              <label class="theme-field" for="theme-textPrimary"><span class="theme-label">Primary text</span><small>Message content</small><span class="theme-control"><input class="theme-hex" id="theme-textPrimary" data-theme-key="textPrimary" maxlength="7" spellcheck="false" autocomplete="off" value="#1F2937" aria-label="Primary text HEX code" /><input class="theme-picker" type="color" id="theme-picker-textPrimary" data-theme-pick="textPrimary" value="#1F2937" aria-label="Pick Primary text" /></span><code>--text-primary</code></label>
+              <label class="theme-field" for="theme-textSecondary"><span class="theme-label">Secondary text</span><small>Footer details</small><span class="theme-control"><input class="theme-hex" id="theme-textSecondary" data-theme-key="textSecondary" maxlength="7" spellcheck="false" autocomplete="off" value="#4B5563" aria-label="Secondary text HEX code" /><input class="theme-picker" type="color" id="theme-picker-textSecondary" data-theme-pick="textSecondary" value="#4B5563" aria-label="Pick Secondary text" /></span><code>--text-secondary</code></label>
+              <label class="theme-field" for="theme-borderColor"><span class="theme-label">Border color</span><small>Section dividers and outlines</small><span class="theme-control"><input class="theme-hex" id="theme-borderColor" data-theme-key="borderColor" maxlength="7" spellcheck="false" autocomplete="off" value="#E5E7EB" aria-label="Border color HEX code" /><input class="theme-picker" type="color" id="theme-picker-borderColor" data-theme-pick="borderColor" value="#E5E7EB" aria-label="Pick Border color" /></span><code>--border-color</code></label>
+              <label class="theme-field" for="theme-notificationRed"><span class="theme-label">Notification red</span><small>Notice blocks</small><span class="theme-control"><input class="theme-hex" id="theme-notificationRed" data-theme-key="notificationRed" maxlength="7" spellcheck="false" autocomplete="off" value="#EF4444" aria-label="Notification red HEX code" /><input class="theme-picker" type="color" id="theme-picker-notificationRed" data-theme-pick="notificationRed" value="#EF4444" aria-label="Pick Notification red" /></span><code>--notification-red</code></label>
+            </div>
+            <details class="theme-css-import"><summary>Paste or copy the full <code>:root</code> palette (optional)</summary>
+              <label for="themeCssInput" class="theme-css-label">Paste your CSS variables below, then select Apply colors.</label>
+              <textarea id="themeCssInput" rows="7" spellcheck="false" placeholder=":root {&#10;  --primary-orange: #F97316;&#10;  ...&#10;}"></textarea>
+              <div class="theme-css-actions"><button class="outline-btn" type="button" id="applyThemeCss">Apply colors</button><button class="outline-btn" type="button" id="copyThemeCss">Copy current CSS</button></div>
+            </details>
+            <p class="theme-hint">Only 6-digit HEX values, e.g. <code>#F97316</code>, are allowed. Invalid colors are not sent. Notification red is used by the optional Notice content block.</p>
+          </div>
+        </section>
+        <section class="panel"><div class="section-title"><span class="step">03</span><div><h2>Email body</h2><p>Add, edit, rearrange, or remove blocks.</p></div></div>
+          <div id="blockList" class="block-list"></div><div class="block-tools"><button data-add="text" type="button"><span class="tool-icon">T</span> Text</button><button data-add="notice" type="button"><span class="tool-icon">!</span> Notice</button><button data-add="image" type="button"><span class="tool-icon">▧</span> Image</button><button data-add="button" type="button"><span class="tool-icon">↗</span> Button</button><button data-add="divider" type="button"><span class="tool-icon">—</span> Divider</button></div>
+          <div class="editor-note">✦ Text is converted into email-safe HTML. Uploaded images are embedded in the message so readers can view them in most email clients.</div>
+        </section>
+        <section class="panel social-panel"><div class="section-title"><span class="step">04</span><div><h2>Social media footer</h2><p>Help students find Brainserve on their favorite platforms.</p></div></div>
+          <label class="social-toggle"><input type="checkbox" id="socialEnabled" checked /><span>Show social links in email footer</span></label>
+          <div id="socialFields">
+            <label class="field full social-title"><span>Footer heading</span><input id="socialTitle" maxlength="100" value="Connect with Brainserve" placeholder="Connect with Brainserve" /></label>
+            <div class="social-inputs">
+              <label class="field"><span>Website</span><input type="url" id="social-website" data-social-platform="website" placeholder="https://your-website.com" autocomplete="off" /></label>
+              <label class="field"><span>LinkedIn</span><input type="url" id="social-linkedin" data-social-platform="linkedin" placeholder="https://www.linkedin.com/company/..." autocomplete="off" /></label>
+              <label class="field"><span>Instagram</span><input type="url" id="social-instagram" data-social-platform="instagram" placeholder="https://www.instagram.com/..." autocomplete="off" /></label>
+              <label class="field"><span>Facebook</span><input type="url" id="social-facebook" data-social-platform="facebook" placeholder="https://www.facebook.com/..." autocomplete="off" /></label>
+              <label class="field"><span>YouTube</span><input type="url" id="social-youtube" data-social-platform="youtube" placeholder="https://www.youtube.com/@..." autocomplete="off" /></label>
+              <label class="field"><span>X / Twitter</span><input type="url" id="social-x" data-social-platform="x" placeholder="https://x.com/..." autocomplete="off" /></label>
+            </div>
+            <p class="social-note">Only completed HTTPS links are included. The actual email embeds clickable social icons; clicking an icon or its label opens that profile. Empty fields are hidden.</p>
+          </div>
+        </section>
+        <section class="panel"><div class="section-title"><span class="step">05</span><div><h2>Attachments</h2><p>PDFs, documents, or other files for students.</p></div></div>
+          <div class="upload-zone" id="dropZone" role="button" tabindex="0"><span class="upload-symbol">⇧</span><strong>Drag files here or <u>browse your device</u></strong><small>Maximum 6 files · 10 MB each · 35 MB total request</small></div><input type="file" id="attachmentFiles" multiple hidden />
+          <div class="attachment-list" id="attachmentList"></div>
+        </section>
+        <div class="bottom-cta"><button type="button" class="secondary-btn" id="resetDraft">↺ Reset design</button><button type="button" class="send-btn" id="sendBottom">➤ Send email</button></div>
+      </section>
+      <aside class="preview-pane" aria-label="Live email preview"><div class="preview-head"><div><div class="eyebrow">LIVE PREVIEW</div><h2>What they'll see</h2><p>Updates as you edit your email.</p></div><div class="device-switch"><button type="button" id="desktopView" class="selected" aria-label="Desktop preview" title="Desktop preview">▣</button><button type="button" id="mobileView" aria-label="Mobile preview" title="Mobile preview">▯</button></div></div>
+      <div class="mail-window"><div class="window-top"><span class="window-dots"><i></i><i></i><i></i></span><span>EMAIL PREVIEW</span><span>↗</span></div><div class="mail-meta"><div class="meta-title" id="previewSubject">Your learning journey starts here</div><div class="meta-sub"><span class="avatar">O</span><div><b id="previewSender">Operation Yuva Sankalp</b><span id="previewAddress">to: recipient@example.com</span></div></div></div>
+      <div class="mail-canvas" id="previewCanvas"><iframe id="previewFrame" title="Email body preview" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox" scrolling="no"></iframe></div></div>
+      <div class="preview-notice"><span>ⓘ</span> Preview reflects the email content. Different inboxes may render spacing slightly differently. Attachments are shown below the composer, not inside the body.</div>
+      </aside>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div id="modal" class="modal-backdrop" hidden><div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-icon">✉</div><h2 id="modalTitle">Send this email?</h2><p id="modalText"></p><div class="modal-actions"><button id="cancelSend" type="button" class="secondary-btn">Cancel</button><button id="confirmSend" type="button" class="send-btn">Confirm &amp; send</button></div></div></div>
+</body></html>
