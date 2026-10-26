@@ -1,120 +1,295 @@
-# Brainserve / Operation Yuva Sankalp — Email Studio (No Login)
+<div align="center">
+  <img src="src/main/resources/static/images/brainserve-logo.png" alt="Brainserve logo" width="300" />
 
-A complete Java 21 / Spring Boot 4.1.2 application for composing branded student emails. **No account, sign-in, registration, admin password, or logout is required.** Open the editor directly at `http://localhost:8080`.
+  # Brainserve Email Studio
 
-## Included
+  **Design. Personalize. Preview. Send.**
 
-- To (up to 50 unique recipients), verified/allowlisted From, From name, optional Reply-to, Subject
-- Visual editor with text, notice, button, divider, image sections; reorder, edit, or delete
-- Official Brainserve logo above the OYS banner, embedded as a CID PNG in every outgoing HTML email
-- Original OYS banner embedded as a CID image; choose your own banner or hide the banner
-- Up to 8 custom inline images, 6 attachments, or 35 MB total request (10 MB individual attachment, 5 MB individual image)
-- All nine OYS colors editable via HEX inputs or a pasted `:root` palette; instant desktop/mobile preview
-- Optional social footer: **clickable image icons** for Website, LinkedIn, Instagram, Facebook, YouTube, and X/Twitter (each PNG embedded as its own CID asset, not an external image URL); clicking icon or label opens the configured HTTPS page
-- Multipart HTML + plain text, accessible email-client-friendly HTML tables, SMTP sending
-- Individual email per recipient to avoid exposing other students' email addresses
-- Upload and hyperlink validation, HTML escaping, CSRF protection, DNS-rebinding Host filter and quota (200 recipient attempts/hour per instance)
+  A visual, locally hosted email composer for **Operation Yuva Sankalp**, built with **Java 21** and **Spring Boot 4.1.2**.
+  Create branded, responsive HTML emails without hand-coding email templates.
 
-## Diagnosing the `0 of 1 SMTP acceptance` error
+  ![Java 21](https://img.shields.io/badge/Java-21-ED8B00?style=flat-square)
+  ![Spring Boot 4.1.2](https://img.shields.io/badge/Spring%20Boot-4.1.2-6DB33F?style=flat-square)
+  ![Maven](https://img.shields.io/badge/Build-Maven-C71A36?style=flat-square)
+  ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square)
+  ![Access](https://img.shields.io/badge/Access-Local--only-0D2A52?style=flat-square)
 
-**New in this version:** The browser shows an SMTP error code and safe instructions while the Java console logs the full nested exception. On startup, look for `SMTP destination: ...` to confirm the actual host/port and TLS/auth settings; no passwords are printed. If the destination is `localhost:1025`, it is local Mailpit and does not deliver to Gmail. The generated Spring Security development password is no longer created; the existing no-login access and CSRF control are preserved.
+  **[Features](#-features) · [Quick Start](#-quick-start) · [Gmail Setup](#-send-real-emails-with-gmail) · [Troubleshooting](#-troubleshooting) · [Security](#-security--limitations)**
+</div>
 
-See **`SMTP_DEBUGGING_GUIDE.md`** for a copy-paste Gmail `.env`, Eclipse working-directory settings, and retry precautions. Keep `src/main/resources/application.yml`'s Spring Boot 4 `spring.web.error` keys.
+> [!IMPORTANT]
+> **No login required — designed for use on your own computer.** The interface can send email using configured SMTP credentials, so do not expose it to the internet or an untrusted network. The bundled Docker setup uses **Mailpit**, a local test inbox; it does **not** send real emails.
 
-## Requirements
+## 📸 Preview
 
-- Java **21**, Apache Maven 3.9+, or Docker with Docker Compose.
-- Internet access **the first time Maven/Docker retrieves dependencies and container images**.
+<p align="center">
+  <img src="docs/images/email-studio-preview.jpg" alt="Brainserve Email Studio composer with branding, theme editor, and live HTML email preview" width="960" />
+</p>
 
-## Quick start (recommended: local Mailpit)
+*Live composer and email preview. Screenshot included in the companion README assets; place `docs/images/email-studio-preview.jpg` in your repository.*
+
+## ✨ Features
+
+| Capability | What it does |
+| --- | --- |
+| **Visual composer** | Set **To**, approved **From**, sender name, optional **Reply-To**, and **Subject**. |
+| **Dynamic content** | Create and reorder text, notices, buttons, dividers, and image blocks. |
+| **Live preview** | Review desktop and mobile layouts before sending. |
+| **Brainserve branding** | Embed the Brainserve logo above the original Operation Yuva Sankalp banner. |
+| **Banner controls** | Keep the default banner, upload a replacement, or hide the banner. |
+| **Editable theme** | Manually edit nine brand colors using HEX values or paste a CSS `:root` palette. |
+| **Social footer** | Add clickable **Website, LinkedIn, Instagram, Facebook, YouTube, and X/Twitter** icons and links. |
+| **Attachments** | Include PDFs and other documents, plus additional inline images. |
+| **Private recipient delivery** | Send a separate MIME message to each recipient instead of exposing the entire recipient list. |
+| **SMTP integration** | Test locally with Mailpit or configure authenticated SMTP for actual sending. |
+| **HTML + plain text** | Send multipart email with CID-embedded images and a plain-text alternative. |
+| **No-login local interface** | Open the editor directly without an account or password. |
+
+### 🎨 Operation Yuva Sankalp color palette
+
+All nine colors are editable in the composer, and the selected values are applied to outgoing email styling.
+
+| Token | Default | Role |
+| --- | --- | --- |
+| `--primary-orange` | `#F97316` | Primary actions and highlights |
+| `--dark-orange` | `#EA580C` | Stronger orange accents |
+| `--dark-navy` | `#0D2A52` | Headings and brand text |
+| `--background` | `#F9FAFB` | Outer email background |
+| `--white` | `#FFFFFF` | Content cards and surfaces |
+| `--text-primary` | `#1F2937` | Main text |
+| `--text-secondary` | `#4B5563` | Supporting text |
+| `--border-color` | `#E5E7EB` | Separators and borders |
+| `--notification-red` | `#EF4444` | Notice styling |
+
+## 🧰 Tech stack
+
+- **Backend:** Java 21, Spring Boot 4.1.2, Spring MVC, Spring Mail/Jakarta Mail, Spring Security
+- **Frontend:** HTML5, CSS3, vanilla JavaScript
+- **Build:** Apache Maven
+- **Local email testing:** Mailpit
+- **Containerization:** Docker and Docker Compose
+- **Storage:** No application database; email drafts are held in browser memory and uploads are processed in memory
+
+## 🚀 Quick start
+
+### Option A — Docker + Mailpit (recommended for testing)
+
+**Prerequisites:** Docker Desktop with Docker Compose.
 
 ```bash
-# Extract the source ZIP, open a terminal in oys-springboot-email-studio
-# No .env or login credentials are required for the default Mailpit setup.
 docker compose up --build -d
 ```
 
-Open **http://localhost:8080** — the editor loads immediately, **without login**. Local email previews/inbox are at **http://localhost:8025**. This setup does **not** deliver email to real recipients: Mailpit safely captures test email.
+| Service | Local URL | Purpose |
+| --- | --- | --- |
+| Email Studio | http://localhost:8080 | Compose and preview emails |
+| Mailpit inbox | http://localhost:8025 | Inspect captured test emails |
 
-To stop: `docker compose down`.
+Send a message from the editor, then inspect it in Mailpit. **This mode does not deliver to Gmail or other real inboxes.** Stop the stack with:
 
-## Run locally without Docker (requires SMTP capture service)
+```bash
+docker compose down
+```
 
-Start a local Mailpit service on `127.0.0.1:1025`, then:
+> Docker Compose intentionally overrides `SMTP_HOST` with `mailpit` and port `1025`. Editing `.env` alone does **not** switch the bundled Compose application to Gmail.
+
+### Option B — Run with Maven
+
+**Prerequisites:** JDK **21**, Maven **3.9+**, and an SMTP server (Mailpit for testing, or a configured email provider).
 
 ```bash
 mvn clean verify
 mvn spring-boot:run
 ```
 
-Visit `http://localhost:8080`. The app binds to `127.0.0.1` when launched directly.
+Then open **http://localhost:8080**. Direct runs bind to `127.0.0.1` by default.
 
-## SMTP configuration for sending real messages
+For local testing without the entire Docker stack, start only Mailpit using `docker compose up -d mailpit` and keep these settings in your `.env` (or equivalent environment):
 
-The bundled Docker Compose configuration intentionally routes messages only to **Mailpit**. To deliver real email, run the app outside the dev Compose configuration with environment variables matching your authorized provider:
+```dotenv
+SMTP_HOST=localhost
+SMTP_PORT=1025
+SMTP_AUTH=false
+SMTP_STARTTLS=false
+SMTP_FROM_ADDRESS=oys@localhost.test
+APP_ALLOW_LOCAL_MAILPIT=false
+```
 
-```text
-SMTP_HOST=smtp.your-provider.example
+## ✉️ Send real emails with Gmail
+
+For **direct Maven/Java launches**, create `.env` next to `pom.xml` (you can start from `.env.example`):
+
+```dotenv
+SERVER_ADDRESS=127.0.0.1
+SERVER_PORT=8080
+SESSION_COOKIE_SECURE=false
+
+SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_AUTH=true
 SMTP_STARTTLS=true
-SMTP_USERNAME=verified@yourdomain.example
-SMTP_PASSWORD=<set through your local secret manager/environment>
-SMTP_FROM_ADDRESS=verified@yourdomain.example
-APP_ALLOWED_FROM=other-verified@yourdomain.example   # optional
+SMTP_USERNAME=yourname@gmail.com
+SMTP_PASSWORD=your_google_app_password
+
+SMTP_FROM_ADDRESS=yourname@gmail.com
+APP_ALLOWED_FROM=yourname@gmail.com
+APP_ALLOW_LOCAL_MAILPIT=false
 ```
 
-`SMTP_FROM_ADDRESS` and `APP_ALLOWED_FROM` must be addresses your SMTP provider permits. The From chooser is populated from these settings; arbitrary spoofed sender addresses are rejected server-side. Remote SMTP must use authentication, required STARTTLS, and certificate hostname verification.
+Replace placeholders with an account you control and a valid **Google App Password** (where your account supports App Passwords). This is **not** your regular Google account password. Never commit `.env` or paste credentials into an issue or screenshot.
 
-**IMPORTANT — no-login security model:** This is a **single-machine, local-only application**. Its REST endpoints are accessible to any local user or process, subject to CSRF and quota limits. Never expose the editor or SMTP test inbox to the public internet or an untrusted LAN. `compose.yaml` binds published ports to `127.0.0.1`; `application.yml` binds the app directly to `127.0.0.1`. The HTTP Host allowlist rejects non-local Host headers, reducing DNS-rebinding risk. Do not replace these safeguards with `0.0.0.0` hosting. For shared or public deployment, add proper authentication and authorization first.
+Run from the **same directory containing `.env`**:
 
-CSRF protection still uses a short-lived session cookie; **this is not a login**. The browser fetches a CSRF token from `GET /api/config` and sends it in the request header for `POST /api/send`. Cookies are HttpOnly/SameSite Strict. You may need to refresh the page if the CSRF session expires.
+```bash
+mvn spring-boot:run
+```
 
-## Email composer workflow
+Check the startup log:
 
-1. Open `http://localhost:8080`, no password prompt.
-2. Enter recipients, choose the configured sender, enter subject and body.
-3. The Brainserve logo appears automatically above the header banner; upload a different OYS banner if you like. Add PDF/doc attachments and the official social profile HTTPS URLs. Blank social fields are omitted.
-4. Manually edit any OYS HEX brand color (or paste all nine as CSS variables).
-5. Review desktop/mobile preview and confirm sending.
-6. Open Mailpit at `http://localhost:8025` to inspect the message, inline logo, clickable social icons/links, and actual attachments.
+```text
+SMTP destination: smtp.gmail.com:587; SMTP_AUTH=true; SMTP_STARTTLS=true
+```
 
-## REST endpoints
+If the application still reports `localhost:1025`, check your working directory and any environment variables or IDE run configuration overriding `.env`.
 
-| Method | Endpoint | Purpose |
-|---|---|---|
-| GET | `/` | Email editor; no login |
-| GET | `/api/config` | Allowed From addresses and CSRF token |
-| POST | `/api/send` | Multipart email send with CSRF token; validated fields and files |
+> [!NOTE]
+> Remote SMTP requires authentication, STARTTLS, a nonempty username/password, and certificate-hostname verification. The `MailTransportGuard` intentionally prevents startup when required remote-SMTP settings are absent. Gmail SMTP access and successful inbox delivery must be tested using your own account.
 
-Requests to invalid HTTP Host headers are rejected. Unsupported paths are not provided as authentication endpoints.
+## 🧑‍🎨 How to use the email composer
 
-## Tests and checks
+1. Open the local editor and enter up to **50 unique recipients**.
+2. Choose an authorized sender address, enter the subject, and optionally set a display name and Reply-To address.
+3. Add or rearrange content blocks; optionally upload a replacement banner and other images.
+4. Update the nine OYS colors and add the HTTPS destinations for your social icons.
+5. Attach study material or other relevant files.
+6. Check the live preview, then confirm the send operation.
+7. For a Mailpit test, inspect the full rendered email, social links, inline images, and attachments at `localhost:8025`.
+
+### Upload limits
+
+| Upload type | Limit |
+| --- | --- |
+| Additional inline images | Up to 8 |
+| Attachments | Up to 6 |
+| Individual banner/image | 5 MB; PNG or JPEG |
+| Individual attachment | 10 MB |
+| Combined multipart HTTP request | 35 MB |
+
+Individual images are additionally validated for dimensions and basic image integrity. Recipient sends are limited to **200 attempts per hour per running application instance**.
+
+## 🗂️ Project structure
+
+```text
+oys-email-studio/
+├── .env.example
+├── .gitignore
+├── compose.yaml
+├── Dockerfile
+├── pom.xml
+├── README.md
+├── docs/
+│   └── images/
+│       └── email-studio-preview.jpg
+├── scripts/
+│   └── security_verify.sh
+└── src/
+    ├── main/
+    │   ├── java/com/brainserve/oysmail/
+    │   │   ├── config/          # Host filter, CSRF, SMTP guard and diagnostics
+    │   │   ├── controller/      # Configuration and send endpoints
+    │   │   ├── model/           # Email blocks, theme, requests, social links
+    │   │   └── service/         # MIME builder, sending, uploads, link validation
+    │   └── resources/
+    │       ├── application.yml
+    │       └── static/
+    │           ├── index.html
+    │           ├── app.js
+    │           ├── styles.css
+    │           └── images/      # Brainserve logo, OYS banner, social icons
+    └── test/java/              # Security, theme, mail and validation tests
+```
+
+## 🔌 Application endpoints
+
+| Method | Path | Description |
+| --- | --- | --- |
+| `GET` | `/` | Email editor |
+| `GET` | `/api/config` | Allowed sender addresses and CSRF token |
+| `POST` | `/api/send` | Validated multipart email submission (CSRF required) |
+
+The browser obtains the CSRF token from `/api/config` and includes it in the send request. There are no account-registration or sign-in endpoints in this project.
+
+## 🧪 Tests and validation
+
+Run the tests before publishing changes:
 
 ```bash
 mvn clean verify
+```
+
+For additional checks on Git Bash, WSL, Linux, or macOS:
+
+```bash
 bash scripts/security_verify.sh
 ```
 
-`src/test/` includes SMTP message assembly, one-recipient-per-message privacy, malicious URL rejection, image validation, theme validation, URL and SMTP guards, host allowlist, and no-login HTTP/CSRF integration tests. `scripts/security_verify.sh` optionally runs Trivy and Docker checks when installed.
+The script runs Maven verification, displays the dependency tree, and invokes Trivy/Docker checks **when those tools are installed**. Automated source tests are included for email assembly, recipient privacy, CSRF/no-login behavior, theme and URL validation, uploads, and SMTP diagnostics.
 
-See `LOGO_AND_SOCIAL_ICONS_VALIDATION.md` for checks of the latest logo/social-icon changes, and `DEBUG_REPORT_NO_LOGIN.md` for the earlier no-login work. A real Maven compile/test, Docker startup, full dependency audit, and SMTP integration test **must pass before production use**.
+**Verification status:** Project source and configuration have had targeted checks. A clean full Maven build, Docker launch, provider SMTP delivery, dependency scan, and cross-client email-rendering tests should be run in your own environment before treating a deployment as validated.
 
-## Notes
+## 🛡️ Security & limitations
 
-- Browser draft is in memory: closing/reloading the tab resets unsaved content. No database or user profiles are part of the project.
-- Uploads are held in memory while sending; they are not saved to a persistent file store.
-- The free-form email body is structured text, not arbitrary HTML; the backend escapes user-provided strings.
-- The HTML preview approximates email-client rendering. Check actual messages in Mailpit and major client apps before wide delivery.
-- Do not commit `.env` or SMTP credentials. Store secrets through your environment/secret management solution.
+- **Local-only, no authentication:** The app is intentionally not designed for public hosting. Other local users/processes may be able to use its send endpoint.
+- **Host and request controls:** Localhost binding, Host validation, CSRF tokens, restrictive browser headers, and per-instance send quotas provide additional safeguards but do **not** replace authentication.
+- **Mail transport:** Remote SMTP must use authentication and required STARTTLS. Keep SMTP credentials in local environment/secret management, not Git.
+- **Untrusted input:** Social/button links and inline HTML content are validated/escaped; sender addresses are allowlisted. Uploaded attachments are not antivirus-scanned.
+- **Email-client differences:** Some inboxes block CID inline images until the recipient allows them. Linked text and the plain-text alternative remain available.
+- **No draft persistence:** Reloading or closing the editor can discard unsaved content. There is no database, background job queue, or delivery-tracking dashboard.
+- **Acceptance vs. delivery:** A successful SMTP response means the mail server accepted the message, **not** that it reached the recipient's inbox. Investigate partial send failures before retrying to avoid duplicates.
 
-## Brainserve logo and social icons (latest update)
+## 🔧 Troubleshooting
 
-- `src/main/resources/static/images/brainserve-logo.png`: extracted from the supplied reference and included **above the banner**, even when the banner is hidden.
-- `src/main/resources/static/images/social/*.png`: six built-in email-compatible social graphics. No external CDN required.
-- `EmailHtmlBuilder`: wraps the icon and its text label in an `<a href="https://...">` anchor. Missing URLs mean no icon is rendered. User-entered destinations are HTML-escaped.
-- `EmailService`: attaches the logo and only the active footer icons to each recipient's individual MIME message as `Content-ID` PNG parts.
-- The editor preview uses local PNG files. Recipient emails use `cid:brainserve-logo` and `cid:social-PLATFORM` to load images.
-- The preview permits HTTPS social links to open a new tab. Outgoing links are validated server-side; official platform domains are enforced for non-website icons.
+<details>
+<summary><strong>SMTP connection refused at localhost:1025</strong></summary>
 
-**Email-client note:** Some inboxes initially block inline images. The visible text label remains clickable, and the plain-text alternative includes every configured HTTPS URL. The recipient's mail client decides whether links open a browser or a web view.
+You're pointing at **Mailpit**, but nothing is listening on that port. Start Mailpit (`docker compose up -d mailpit`) or switch your **direct Java/Maven** launch to an actual SMTP provider. The bundled full Compose stack is deliberately Mailpit-only.
+</details>
+
+<details>
+<summary><strong>MailTransportGuard: Remote SMTP requires SMTP_AUTH, STARTTLS, username, and password</strong></summary>
+
+Confirm all four `.env` settings are present, your App Password is nonempty, and the app is launched with the correct project-root working directory. Check whether OS/IDE environment variables override the `.env` file. Do **not** delete the guard or disable TLS.
+</details>
+
+<details>
+<summary><strong>SMTP authentication, TLS, or delivery errors</strong></summary>
+
+Review the startup line `SMTP destination: ...` and the server-side `SMTP transmission failed (category=...)` exception. On Windows, `Test-NetConnection smtp.gmail.com -Port 587` checks TCP connectivity only; it does not validate Gmail credentials or guarantee delivery. Avoid repeatedly resending an uncertain batch.
+</details>
+
+<details>
+<summary><strong>Request rejected or CSRF error</strong></summary>
+
+Refresh the editor to obtain a new CSRF token. Keep the local session cookie enabled and open the same `localhost:8080` origin as the application.
+</details>
+
+<details>
+<summary><strong>Images or icons do not show in a recipient's email</strong></summary>
+
+Check the received email in Mailpit and in the target email client. Inline logo, banner, and social icons are sent using Content-ID (CID) image attachments. Some inboxes require recipients to allow images; social-link labels are also clickable.
+</details>
+
+## 🤝 Contributing
+
+Improvements to accessibility, email-client compatibility, tests, and developer experience are welcome. Before proposing changes, run `mvn clean verify`, avoid committing credentials, and describe how you tested the email output.
+
+## 📜 License & branding
+
+No open-source license is included with the current project files. Add an explicit `LICENSE` file before granting reuse permissions. **Brainserve** and **Operation Yuva Sankalp** names, logos, and artwork should be used only with appropriate authorization.
+
+---
+
+<div align="center">
+  <strong>Brainserve Email Studio</strong><br />
+  <sub>Professional branded communication for Operation Yuva Sankalp.</sub>
+</div>
